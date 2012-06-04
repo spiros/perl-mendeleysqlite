@@ -8,4 +8,8 @@ ________
 
 Generate an HTML tagcloud of all your keywords.
 
-perl bin/maketagcloud.pl --dbfile=moo.sqlite --mode=keywords > cloud.html
+```shell
+perl -Ilib bin/maketagcloud.pl --dbfile=moo.sqlite --mode=keywords > cloud.html
+```
+
+* Mac users can find their Mendeley SQLite database file under: `~/Library/Application Support/Mendeley Desktop/*.sqlite`
