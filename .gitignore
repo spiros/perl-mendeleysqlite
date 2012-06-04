@@ -1,3 +1,4 @@
+*.html
 blib/
 .build/
 _build/
