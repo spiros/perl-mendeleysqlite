@@ -62,7 +62,7 @@ sub get_all_keywords {
     
 }
 
-=head2 get_all_tagd
+=head2 get_all_tags
 
     Get all tags associated with documents from your library. Returns a reference to a hash
     with the tags and their frequency.
