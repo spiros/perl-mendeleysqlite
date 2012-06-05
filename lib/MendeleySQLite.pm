@@ -9,6 +9,8 @@ use Data::Dumper;
 use DBI;
 use SQL::Abstract;
 
+# ABSTRACT: A collection of tools for working with Mendeley Desktop's SQLite backend.
+
 =head2 new
 
     Returns a new instance of the class.
