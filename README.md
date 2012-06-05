@@ -12,4 +12,5 @@ Generate an HTML tagcloud of all your keywords.
 perl -Ilib bin/maketagcloud.pl --dbfile=moo.sqlite --mode=keywords > cloud.html
 ```
 
-* Mac users can find their Mendeley SQLite database file under: `~/Library/Application Support/Mendeley Desktop/*.sqlite`
+For more information on how to locate the Mendeley Desktop database visit: http://support.mendeley.com/customer/portal/articles/227951-how-do-i-locate-mendeley-desktop-database-files-on-my-computer-
+
