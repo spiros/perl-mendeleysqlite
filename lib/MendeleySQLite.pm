@@ -13,7 +13,10 @@ use SQL::Abstract;
 
 =head2 new
 
-    Returns a new instance of the class.
+Returns a new instance of the class.
+
+    my $rh = { 'dbfile' => 'path/to/db' };
+    my $M = MendeleySQLite->new( $rh );
 
 =cut
 
@@ -40,8 +43,8 @@ sub new {
 
 =head2 get_all_keywords
 
-    Get all keywords associated with documents from your library. Returns a reference to a hash
-    with the keywords and their frequency.
+Get all keywords associated with documents from your library. Returns a reference to a hash
+with the keywords and their frequency.
     
     my $rh_keywords = $M->get_all_keywords();    
 
@@ -69,8 +72,8 @@ sub get_all_keywords {
 
 =head2 get_all_tags
 
-    Get all tags associated with documents from your library. Returns a reference to a hash
-    with the tags and their frequency.
+Get all tags associated with documents from your library. Returns a reference to a hash
+with the tags and their frequency.
     
     my $rh_tags = $M->get_all_tags();    
 
@@ -98,8 +101,8 @@ sub get_all_tags {
 
 =head2 get_all_tags_for_document
 
-    Get all tags associated with a document in your library. Returns a reference to an array.
-    This method returns undef on error.
+Get all tags associated with a document in your library. Returns a reference to an array.
+This method returns undef on error.
     
     my $ra_tags = $M->get_all_tags_for_document( $documentid );
 
@@ -133,8 +136,8 @@ sub get_all_tags_for_document {
 
 =head2 get_all_keywords_for_document
 
-    Get all keywords associated with a document in your library. Returns a reference to an array.
-    This method returns undef on error.
+Get all keywords associated with a document in your library. Returns a reference to an array.
+This method returns undef on error.
     
     my $ra_keywords = $M->get_all_keywords_for_document( $documentid );
 
@@ -168,10 +171,10 @@ sub get_all_keywords_for_document {
 
 =head2 get_document()
 
-    Retrieves a document from your library matching the supplied document id. Returns a reference to a hash.
-    The document tags and keywords are denormalized and the original values are supplied under the keys 'tags' and 'keywords' respectively.
-    
-    This method returns undef on error.
+Retrieves a document from your library matching the supplied document id. Returns a reference to a hash.
+The document tags and keywords are denormalized and the original values are supplied under the keys 'tags' and 'keywords' respectively.
+
+This method returns undef on error.
     
     my $rh_document = $M->get_document( $id );
 
