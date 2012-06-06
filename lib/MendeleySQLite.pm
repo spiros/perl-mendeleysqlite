@@ -117,7 +117,7 @@ sub get_all_tags_for_document {
     my $ra_output = [ ];
         
     my ( $sql, $ra_bind ) = 
-        $self->_create_sql( 'DocumentTags', [ 'tag' ], { documentId => $document_id } );
+        $self->_create_sql( 'select', 'DocumentTags', [ 'tag' ], { documentId => $document_id } );
     
     my $sth = $self->_execute_sql( $sql, $ra_bind );
   
@@ -152,7 +152,7 @@ sub get_all_keywords_for_document {
     my $ra_output = [ ];
         
     my ( $sql, $ra_bind ) = 
-        $self->_create_sql( 'DocumentKeywords', [ 'keyword' ], { documentId => $document_id } );
+        $self->_create_sql( 'select', 'DocumentKeywords', [ 'keyword' ], { documentId => $document_id } );
     
     my $sth = $self->_execute_sql( $sql, $ra_bind );
   
@@ -168,6 +168,77 @@ sub get_all_keywords_for_document {
 
     return $ra_output;
 }
+
+=head2 set_keyword_for_document
+
+Associate the specified keyword with the supplied focument id. If the keyword already exists, nothing will be done.
+This function returns true on success and undef on error.
+
+    my $rv = $M->set_keyword_for_document(1,'Moo');
+
+=cut
+
+sub set_keyword_for_document {
+    my $self    = shift;
+    my $id      = shift;
+    my $keyword = shift;
+    
+    return undef
+        if ( ! defined $id || ! defined $keyword );
+    
+    my $ra_keywords = 
+        $self->get_all_keywords_for_document( $id );
+    
+    my %keywords = map { $_ => 1 } @$ra_keywords;
+    
+    ## If the keyword exists already, do not try to re-insert it as the query
+    ## will fail the referential constraint set by the table's schema.
+    
+    if ( exists $keywords{$keyword} ) {
+        return 1;
+    }
+    
+    my ( $sql, $ra_bind ) =
+            $self->_create_sql( 'insert', 'DocumentKeywords', { 'documentId' => $id, 'keyword' => $keyword } );
+
+    return $self->_execute_sql( $sql, $ra_bind );
+}
+
+=head2 set_tag_for_document
+
+Associate the specified tag with the supplied focument id. If the tag already exists, nothing will be done.
+This function returns true on success and undef on error.
+
+    my $rv = $M->set_tag_for_document(1,'MooMooMoo');
+
+=cut
+
+sub set_tag_for_document {
+    my $self    = shift;
+    my $id      = shift;
+    my $tag = shift;
+    
+    return undef
+        if ( ! defined $id || ! defined $tag );
+    
+    my $ra_tags = 
+        $self->get_all_tags_for_document( $id );
+    
+    my %tags = map { $_ => 1 } @$ra_tags;
+    
+    ## If the tag exists already, do not try to re-insert it as the query
+    ## will fail the referential constraint set by the table's schema.
+    
+    if ( exists $tags{$tag} ) {
+        return 1;
+    }
+    
+    my ( $sql, $ra_bind ) =
+            $self->_create_sql( 'insert', 'DocumentTags', { 'documentId' => $id, 'tag' => $tag } );
+
+    return $self->_execute_sql( $sql, $ra_bind );
+}
+
 
 =head2 get_document()
 
@@ -187,7 +258,7 @@ sub get_document {
     return undef if ( ! defined $id );
     
     my ( $sql, $ra_bind ) =
-        $self->_create_sql( 'Documents', [ '*' ], { id => $id } );
+        $self->_create_sql( 'select', 'Documents', [ '*' ], { id => $id } );
     
     my $sth = $self->_execute_sql( $sql, $ra_bind );
 
@@ -215,18 +286,55 @@ sub get_document {
     
 }
 
-sub _create_sql {
-    my $self      = shift;
-    my $table     = shift;
-    my $ra_fields = shift;
-    my $rh_params = shift;
+=head2 get_all_document_ids()
+
+Returns a reference to an array of document id's in the library. 
+
+    my $ra_ids = $M->get_all_document_ids()
     
-    my ( $stmt, @bind ) =
-        $self->{sql}->select( $table, $ra_fields, $rh_params );
-        
-    return ( $stmt, \@bind );
+=cut
+
+sub get_all_document_ids {
+    my $self = shift;
+    
+    my $ra_out = [ ];
+    
+    my ( $sql, $ra_bind ) =
+        $self->_create_sql( 'select', 'Documents', [ 'id' ], {  } );
+    
+    my $sth = $self->_execute_sql( $sql, $ra_bind );
+    
+    my $raa = $sth->fetchall_arrayref();
+    
+    foreach my $ra ( @$raa ) {
+        push(@$ra_out, $ra->[0]);
+    }
+    
+    return $ra_out;    
 }
 
+sub _create_sql {
+    my $self      = shift;
+    my $op        = shift;
+    my $table     = shift;
+    my $r_fields  = shift;
+    my $r_params  = shift;
+    
+    my $stmt;
+    my @bind;
+    
+    if ( $op eq 'select' ) {
+        ( $stmt, @bind ) =
+            $self->{sql}->select( $table, $r_fields, $r_params );
+    } 
+    
+    elsif ( $op eq 'insert' ) {
+        ( $stmt, @bind ) =
+            $self->{sql}->insert( $table, $r_fields );        
+    }
+            
+    return ( $stmt, \@bind );
+}
 
 sub _execute_sql {
     my $self = shift;
@@ -241,10 +349,6 @@ sub _execute_sql {
     return $sth;    
     
 }
-
-
-
-
 
 
 1;

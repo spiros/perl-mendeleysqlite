@@ -229,4 +229,52 @@ isa_ok( $M, 'MendeleySQLite' );
     
 }
 
+{
+    ## 
+    ## get_all_document_ids()
+    
+    my $ra_all_ids = $M->get_all_document_ids();
+    
+    is( scalar(@$ra_all_ids), 5 );
+}
+
+{
+    ##
+    ## set_keyword_for_document()
+    
+    my $rv = $M->set_keyword_for_document(1,'moo');
+    ok ( $rv );
+
+    $rv = $M->set_keyword_for_document(1,'moo');
+    ok ( $rv );
+     
+    my $ra_keywords = 
+        $M->get_all_keywords_for_document('1');
+        
+    my %keywords = map { $_ => 1 } @$ra_keywords;
+
+    ok ( exists $keywords{'moo'} );
+    
+}
+
+{
+    ##
+    ## set_tag_for_document()
+    
+    my $rv = $M->set_tag_for_document(1,'moo');
+    ok ( $rv );
+
+    $rv = $M->set_tag_for_document(1,'moo');
+    ok ( $rv );
+     
+    my $ra_tags = 
+        $M->get_all_tags_for_document('1');
+    
+    my %tags = map { $_ => 1 } @$ra_tags;
+    
+    ok ( exists $tags{'moo'} );
+    
+}
+
+
 done_testing();
