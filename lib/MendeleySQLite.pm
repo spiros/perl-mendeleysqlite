@@ -48,7 +48,7 @@ sub new {
 =cut
 
 sub get_all_keywords {
-    my $self = shift;
+    my $self = shift;    
     
     my $sql_all_keywords = 
         'SELECT keyword,COUNT(*) AS n from DocumentKeywords GROUP BY keyword';
@@ -164,6 +164,52 @@ sub get_all_keywords_for_document {
     }
 
     return $ra_output;
+}
+
+=head2 get_document()
+
+    Retrieves a document from your library matching the supplied document id. Returns a reference to a hash.
+    The document tags and keywords are denormalized and the original values are supplied under the keys 'tags' and 'keywords' respectively.
+    
+    This method returns undef on error.
+    
+    my $rh_document = $M->get_document( $id );
+
+=cut
+
+sub get_document {
+    my $self = shift;
+    my $id   = shift;
+    
+    return undef if ( ! defined $id );
+    
+    my ( $sql, $ra_bind ) =
+        $self->_create_sql( 'Documents', [ '*' ], { id => $id } );
+    
+    my $sth = $self->_execute_sql( $sql, $ra_bind );
+
+    my $rhh = $sth->fetchall_hashref('id');
+        
+    my $rh_document = $rhh->{ $id };
+    
+    if ( ! defined $rh_document ) {
+        return undef;
+    }
+    
+    my $ra_keywords = $self->get_all_keywords_for_document( $id );
+    
+    if ( scalar(@$ra_keywords) ) {
+        $rh_document->{keywords} = $ra_keywords;
+    }
+    
+    my $ra_tags = $self->get_all_tags_for_document( $id );
+    
+    if ( scalar(@$ra_tags) ) {
+        $rh_document->{tags} = $ra_tags
+    }
+    
+    return $rh_document;
+    
 }
 
 sub _create_sql {

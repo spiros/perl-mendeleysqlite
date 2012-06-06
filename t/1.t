@@ -124,29 +124,109 @@ isa_ok( $M, 'MendeleySQLite' );
     
 }
 
+{
+    ##
+    ## get_document()
+    
+    my $rh_document = $M->get_document('2');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    my $rh_expected = {
+              'hideFromMendeleyWebIndex' => 'false',
+              'advisor' => undef,
+              'department' => undef,
+              'citationKey' => undef,
+              'chapter' => '532',
+              'issue' => '8',
+              'keywords' => [
+                              'bias',
+                              'error'
+                            ],
+              'session' => undef,
+              'day' => undef,
+              'seriesNumber' => undef,
+              'isbn' => undef,
+              'doi' => undef,
+              'code' => undef,
+              'originalPublication' => undef,
+              'reviewedArticle' => undef,
+              'modified' => '1338896138',
+              'arxivId' => undef,
+              'lastUpdate' => undef,
+              'title' => 'Why Most Published Research Findings Are False',
+              'pages' => 'e124',
+              'codeSection' => undef,
+              'userType' => undef,
+              'committee' => undef,
+              'month' => undef,
+              'internationalUserType' => undef,
+              'added' => '1338896116',
+              'series' => 'WISICT \'04',
+              'seriesEditor' => undef,
+              'medium' => undef,
+              'edition' => undef,
+              'sections' => undef,
+              'dateAccessed' => undef,
+              'country' => undef,
+              'sourceType' => undef,
+              'language' => undef,
+              'articleColumn' => undef,
+              'applicationNumber' => undef,
+              'internationalTitle' => undef,
+              'tags' => [
+                          'bias',
+                          'error'
+                        ],
+              'length' => undef,
+              'deletionPending' => 'false',
+              'pmid' => undef,
+              'importer' => 'CatalogImporter',
+              'year' => '2005',
+              'institution' => 'Department of Hygiene and Epidemiology, University of Ioannina School of Medicine, Ioannina, Greece. jioannid@cc.uoi.gr',
+              'shortTitle' => undef,
+              'uuid' => '{b8558cdb-4d86-4ac0-9831-db22f6894c0d}',
+              'favourite' => 'false',
+              'confirmed' => 'true',
+              'read' => 'false',
+              'id' => '2',
+              'privacy' => 'NormalDocument',
+              'publisher' => 'Public Library of Science',
+              'deduplicated' => 'false',
+              'genre' => undef,
+              'legalStatus' => undef,
+              'abstract' => 'Summary: There is increasing concern that most current published research findings are false. The probability that a research claim is true may depend on study power and bias, the number of other studies on the same question, and, importantly, the ratio of true to no relationships among the relationships probed in each scientific field. In this framework, a research finding is less likely to be true when the studies conducted in a field are smaller; when effect sizes are smaller; when there is a greater number and lesser preselection of tested relationships; where there is greater flexibility in designs, definitions, outcomes, and analytical modes; when there is greater financial and other interest and prejudice; and when more teams are involved in a scientific field in chase of statistical significance. Simulations show that for most study designs and settings, it is more likely for a research claim to be false than true. Moreover, for many current scientific fields, claimed research findings may often be simply accurate measures of the prevailing bias. In this essay, I discuss the implications of these problems for the conduct and interpretation of research.',
+              'type' => 'JournalArticle',
+              'publication' => 'PLoS Medicine',
+              'codeVolume' => undef,
+              'revisionNumber' => undef,
+              'internationalAuthor' => undef,
+              'issn' => undef,
+              'city' => undef,
+              'publicLawNumber' => undef,
+              'counsel' => undef,
+              'onlyReference' => 'false',
+              'owner' => undef,
+              'volume' => '2',
+              'note' => undef,
+              'codeNumber' => undef,
+              'reprintEdition' => undef,
+              'internationalNumber' => undef
+            };
+    
+    cmp_deeply(
+        $rh_document,
+        $rh_expected
+    );
+    
+    is(
+        $M->get_document('123'),
+        undef
+    );
+    
+    is(
+        $M->get_document(),
+        undef
+    );
+    
+}
 
 done_testing();
