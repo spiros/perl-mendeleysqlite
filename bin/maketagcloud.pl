@@ -8,6 +8,9 @@ use Data::Dumper;
 use Getopt::Long;
 use HTML::TagCloud;
 
+# ABSTRACT: Create a tagcloud from your document keywords or tags
+# PODNAME: maketagcloud.pl
+
 my $rh_params = { };
 
 GetOptions(
